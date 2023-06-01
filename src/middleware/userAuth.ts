@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { IRequestCustom } from '../types/types';
 
-export const userAuth = (
+const userAuth = (
   req: IRequestCustom,
   res: Response,
   next: NextFunction
