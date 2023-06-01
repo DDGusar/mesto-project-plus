@@ -1,20 +1,22 @@
+import mongoose from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
-import ErrorCastom from '../utils/errorCastom';
+import ErrorCustom from '../utils/errorCustom';
 
 const errorHandler = (
-  err: ErrorCastom,
+  err: ErrorCustom,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  let error = { ...err };
-  if (err.name === 'CastError') {
-    const message = 'Пользователь или карточка не найдены';
-    error = new ErrorCastom(message, 404);
+  let error = err;
+  if (err instanceof mongoose.Error.CastError) {
+    const message = 'Невалидный _id';
+    error = new ErrorCustom(message, 404);
   }
-  if (err.name === 'ValidationError') {
+
+  if (err instanceof mongoose.Error.ValidationError) {
     const message = 'Переданы некорректные данные';
-    error = new ErrorCastom(message, 400);
+    error = new ErrorCustom(message, 400);
   }
   res.status(error.statusCode || 500).json({
     message: error.message || 'Ошибка сервера',
