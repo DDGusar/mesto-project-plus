@@ -1,4 +1,4 @@
-export default class ErrorCastom extends Error {
+export default class ErrorCustom extends Error {
   statusCode: number;
 
   constructor(message: string, statusCode: number) {

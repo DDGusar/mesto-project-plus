@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { IRequestCustom } from '../types/types';
 import User from '../models/user';
+import ErrorCustom from '../utils/errorCustom';
 
 export const getUsers = (req: Request, res: Response, next: NextFunction) =>
   User.find({})
@@ -21,6 +22,9 @@ export const getUserById = (
 ) => {
   const { id } = req.params;
   return User.findById(id)
+    .orFail(
+      () => new ErrorCustom('Пользователь по указанному _id не найден', 404)
+    )
     .then((user) => res.status(200).send(user))
     .catch(next);
 };
@@ -31,7 +35,14 @@ export const updateProfile = (
   next: NextFunction
 ) => {
   const { name, about } = req.body;
-  return User.findByIdAndUpdate(req.user?._id, { name, about }, { new: true })
+  return User.findByIdAndUpdate(
+    req.user?._id,
+    { name, about },
+    { new: true, runValidators: true }
+  )
+    .orFail(
+      () => new ErrorCustom('Пользователь по указанному _id не найден', 404)
+    )
     .then((user) => res.status(200).send(user))
     .catch(next);
 };
@@ -42,7 +53,14 @@ export const updateAvatar = (
   next: NextFunction
 ) => {
   const { avatar } = req.body;
-  return User.findByIdAndUpdate(req.user?._id, { avatar }, { new: true })
+  return User.findByIdAndUpdate(
+    req.user?._id,
+    { avatar },
+    { new: true, runValidators: true }
+  )
+    .orFail(
+      () => new ErrorCustom('Пользователь по указанному _id не найден', 404)
+    )
     .then((user) => res.status(200).send(user))
     .catch(next);
 };
