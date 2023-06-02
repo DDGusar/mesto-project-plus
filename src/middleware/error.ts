@@ -11,7 +11,7 @@ const errorHandler = (
   let error = err;
   if (err instanceof mongoose.Error.CastError) {
     const message = 'Невалидный _id';
-    error = new ErrorCustom(message, 404);
+    error = new ErrorCustom(message, 400);
   }
 
   if (err instanceof mongoose.Error.ValidationError) {
