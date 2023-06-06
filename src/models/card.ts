@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import pictureRegExp from '../constants/regExpressions';
 
 interface ICard {
   name: string;
@@ -18,6 +19,10 @@ const cardSchema = new Schema<ICard>({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator: (v: string) => pictureRegExp.test(v),
+      message: 'Неверный формат ссылки',
+    },
   },
   owner: {
     type: Schema.Types.ObjectId,
